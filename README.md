@@ -13,9 +13,37 @@ it with URLs as well when you build the app for webn
 We can also see that the state is not kept when using the tab bar on the
 Feed route. 
 
-## Keep state with tab bar route destinations
-A question is, how can we with routemaster keep the state of the routes
+## Q1: Keep state with tab bar route destinations
+A question is, how can we with **routemaster** keep the state of the routes
 in tab bar destinations?
 
-This question is asked in the routemaster repo here:
+This question was asked am answered in the routemaster 
+repo here: https://github.com/tomgilder/routemaster/issues/87
 
+
+Converting the SettingsPage to a StatefulWidget and adding AutomaticKeepAliveClientMixin keeps the scrolling position:
+
+```dart
+class SettingsPage extends StatefulWidget {
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage>
+  with AutomaticKeepAliveClientMixin {
+  
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    ...
+  }
+}
+```
+
+Did not need the `AutomaticKeepAliveClientMixin` in my own use cases before,
+with a different navigator, adding a PageStore key to the tab pages did the 
+same trick for me before, but it did not work with routemaster, not sure 
+why not but this woks OK of course. 

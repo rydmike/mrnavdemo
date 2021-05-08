@@ -5,9 +5,18 @@ import 'package:provider/provider.dart';
 import '../main.dart';
 import 'grid_items.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage>
+    with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final appState = Provider.of<AppState>(context);
     final ThemeData theme = Theme.of(context);
     final TextTheme textTheme = theme.textTheme;
