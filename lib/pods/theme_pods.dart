@@ -2,7 +2,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../utils/theme.dart';
+import '../utils/app_theme.dart';
 
 // All theming related providers in this file.
 
@@ -13,36 +13,31 @@ final StateProvider<ThemeMode> themeModePod =
   return ThemeMode.system;
 });
 
-final StateProvider<double> appBarOpacityProvider =
-    StateProvider<double>((ProviderReference ref) {
-  return 0.85;
-});
-
-final StateProvider<int> schemeProvider =
+final StateProvider<int> schemePod =
     StateProvider<int>((ProviderReference ref) {
   return 0;
 });
 
-final StateProvider<FlexAppBarStyle> lightAppBarStyleProvider =
-    StateProvider<FlexAppBarStyle>((ProviderReference ref) {
-  return FlexAppBarStyle.primary;
-});
-
-final StateProvider<FlexAppBarStyle> darkAppBarStyleProvider =
+final StateProvider<FlexAppBarStyle> lightAppBarStylePod =
     StateProvider<FlexAppBarStyle>((ProviderReference ref) {
   return FlexAppBarStyle.background;
 });
 
-final StateProvider<FlexSurface> surfaceStyleProvider =
+final StateProvider<FlexAppBarStyle> darkAppBarStylePod =
+    StateProvider<FlexAppBarStyle>((ProviderReference ref) {
+  return FlexAppBarStyle.background;
+});
+
+final StateProvider<FlexSurface> surfaceStylePod =
     StateProvider<FlexSurface>((ProviderReference ref) {
-  return FlexSurface.medium;
+  return FlexSurface.heavy;
 });
 
 final StateProvider<ThemeData> lightThemePod =
     StateProvider<ThemeData>((ProviderReference ref) {
-  final int usedTheme = ref.watch(schemeProvider).state;
-  final FlexAppBarStyle appBarStyle = ref.watch(lightAppBarStyleProvider).state;
-  final FlexSurface surfaceStyle = ref.watch(surfaceStyleProvider).state;
+  final int usedTheme = ref.watch(schemePod).state;
+  final FlexAppBarStyle appBarStyle = ref.watch(lightAppBarStylePod).state;
+  final FlexSurface surfaceStyle = ref.watch(surfaceStylePod).state;
   return AppTheme.light(
     usedTheme: usedTheme,
     appBarStyle: appBarStyle,
@@ -52,9 +47,9 @@ final StateProvider<ThemeData> lightThemePod =
 
 final StateProvider<ThemeData> darkThemePod =
     StateProvider<ThemeData>((ProviderReference ref) {
-  final int usedTheme = ref.watch(schemeProvider).state;
-  final FlexAppBarStyle appBarStyle = ref.watch(darkAppBarStyleProvider).state;
-  final FlexSurface surfaceStyle = ref.watch(surfaceStyleProvider).state;
+  final int usedTheme = ref.watch(schemePod).state;
+  final FlexAppBarStyle appBarStyle = ref.watch(darkAppBarStylePod).state;
+  final FlexSurface surfaceStyle = ref.watch(surfaceStylePod).state;
   return AppTheme.dark(
     usedTheme: usedTheme,
     appBarStyle: appBarStyle,

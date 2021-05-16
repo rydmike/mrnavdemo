@@ -68,20 +68,20 @@ class AppTheme {
   static ElevatedButtonThemeData get elevatedButtonTheme =>
       ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-        shape: buttonShape,
+        shape: StadiumBorder(),
         padding: roundButtonPadding,
       ));
 
   static OutlinedButtonThemeData get outlinedButtonTheme =>
       OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
-        shape: buttonShape,
+        shape: StadiumBorder(),
         padding: roundButtonPadding,
       ));
 
   static TextButtonThemeData get textButtonTheme => TextButtonThemeData(
           style: TextButton.styleFrom(
-        shape: buttonShape,
+        shape: StadiumBorder(),
         padding: roundButtonPadding,
       ));
 
@@ -89,14 +89,6 @@ class AppTheme {
   // adjust here to tune the padding for all of them globally in the app.
   static const EdgeInsets roundButtonPadding =
       EdgeInsets.symmetric(horizontal: 20, vertical: 16);
-
-  // The shape of all the themed buttons in the app. Earlier we used
-  // StadiumBorder() as shape, that makes them all a half circle like a
-  // stadium end. With this version we can vary the rounding, but it if
-  // we want a fully rounded look we should use the stadium border.
-  static const OutlinedBorder buttonShape = RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(50)),
-  );
 
   /// ToggleButtons theme
   static ToggleButtonsThemeData toggleButtonsTheme(ColorScheme colorScheme) =>
@@ -122,7 +114,7 @@ class AppTheme {
         ),
       );
 
-  // These colors came from Alessio's dragon image example
+  // Just a demo color scheme for this app
   static FlexSchemeColor get demoSchemeLight => FlexSchemeColor.from(
         primary: const Color(0xFF00AABE),
         secondary: const Color(0xFFF4461E),
@@ -137,7 +129,7 @@ class AppTheme {
         // We do the same for our next custom scheme, BUT we create its matching
         // dark colors, from the light FlexSchemeColor with the toDark method.
         FlexSchemeData(
-          name: 'Demo scheme',
+          name: 'Demo',
           description: "Custom cyan and orange theme.",
           light: demoSchemeLight,
           dark: demoSchemeLight.toDark(),

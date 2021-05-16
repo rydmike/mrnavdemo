@@ -22,42 +22,51 @@ class FeedPage extends StatelessWidget {
                 },
                 child: Text('Push profile page with ID 1'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () =>
                     Routemaster.of(context).push('profile/2?message=hello'),
                 child: Text('Push profile page with ID 2 and query string'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () =>
                     Routemaster.of(context).push('profile/1/photo'),
                 child: Text("Go to user 1's photo page (skipping stacks)"),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => Routemaster.of(context).push('profile/3'),
                 child: Text('Go to user 3 (validation fail)'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => Routemaster.of(context).push('/404'),
                 child: Text('Go to /404'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () =>
                     Routemaster.of(context).push('/bottom-navigation-bar'),
                 child: Text('Bottom Navigation Bar page'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => Routemaster.of(context)
                     .replace('/bottom-navigation-bar-replace'),
                 child: Text('Replace test'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => Routemaster.of(context).push('/settings'),
                 child: Text('Jump to settings tab'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => Routemaster.of(context).push('/tab-bar'),
                 child: Text('Tab bar page'),
               ),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).push<void>(
                   MaterialPageRoute(builder: (context) {

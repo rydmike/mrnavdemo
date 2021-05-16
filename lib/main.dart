@@ -12,6 +12,7 @@ import 'pages/search_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/tab_bar_page.dart';
 import 'pods/app_state_pods.dart';
+import 'pods/theme_pods.dart';
 
 void main() {
   Routemaster.setPathUrlStrategy();
@@ -31,41 +32,30 @@ class TitleObserver extends RoutemasterObserver {
   }
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late RoutemasterDelegate _delegate;
-  late bool _isLoggedIn;
-  late bool _showBonusTab;
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(builder: (context, watch, child) {
-      _isLoggedIn = watch(isLoggedInPod).state;
-      _showBonusTab = watch(showBonusTab).state;
-      _delegate = RoutemasterDelegate(
+  Widget build(BuildContext context, ScopedReader watch) {
+    return MaterialApp.router(
+      title: 'Routemaster Demo',
+      debugShowCheckedModeBanner: false,
+      theme: watch(lightThemePod).state,
+      darkTheme: watch(darkThemePod).state,
+      themeMode: watch(themeModePod).state,
+      routeInformationParser: RoutemasterParser(),
+      routerDelegate: RoutemasterDelegate(
         observers: [TitleObserver()],
         routesBuilder: (BuildContext context) {
-          debugPrint('Routes builder: Is logged in: $_isLoggedIn');
-          debugPrint('Routes builder: Show bonus tab: $_showBonusTab');
+          bool _isLoggedIn = watch(isLoggedInPod).state;
+          bool _showBonusTab = watch(showBonusTab).state;
           // We swap out the routing map at runtime based on app state
           return _isLoggedIn
               ? _buildRouteMap(_showBonusTab)
               : loggedOutRouteMap;
         },
-      );
-
-      return MaterialApp.router(
-        title: 'Routemaster Demo',
-        routeInformationParser: RoutemasterParser(),
-        routerDelegate: _delegate,
-      );
-    });
+      ),
+    );
   }
 }
 

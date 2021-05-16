@@ -22,9 +22,6 @@ dependencies:
   # https://pub.dev/packages/routemaster
   routemaster: ^0.8.0
 
-  # https://pub.dev/packages/provider
-  # provider: ^5.0.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

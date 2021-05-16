@@ -87,6 +87,7 @@ class NotificationsContentPage extends StatelessWidget {
           Column(
             children: [
               Text(message),
+              const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () =>
                     Routemaster.of(context).push('/notifications/pushed'),
