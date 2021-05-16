@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
-import '../main.dart';
+import '../pods/app_state_pods.dart';
 
-class TabBarPage extends StatelessWidget {
+class TabBarPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
+  Widget build(BuildContext context, ScopedReader watch) {
     final tabPage = TabPage.of(context);
 
     return Scaffold(
@@ -20,7 +19,7 @@ class TabBarPage extends StatelessWidget {
               icon: Icon(Icons.directions_car),
               text: 'Home',
             ),
-            if (appState.showBonusTab)
+            if (watch(showBonusTab).state)
               Tab(
                 icon: Icon(Icons.directions_transit),
                 text: 'Bonus',
@@ -35,7 +34,7 @@ class TabBarPage extends StatelessWidget {
       body: TabBarView(
         controller: tabPage.controller,
         children: [
-          for (final stack in tabPage.stacks) StackNavigator(stack: stack),
+          for (final stack in tabPage.stacks) PageStackNavigator(stack: stack),
         ],
       ),
     );

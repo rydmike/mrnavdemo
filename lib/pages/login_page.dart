@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
+import '../pods/app_state_pods.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    debugPrint('Login: Is logged in: ${watch(isLoggedInPod).state}');
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -16,7 +17,7 @@ class LoginPage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Provider.of<AppState>(context, listen: false).isLoggedIn = true;
+                context.read(isLoggedInPod).state = true;
               },
               child: Text('Log in'),
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
 import 'pages/bottom_navigation_bar_page.dart';
@@ -11,10 +11,11 @@ import 'pages/notifications_page.dart';
 import 'pages/search_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/tab_bar_page.dart';
+import 'pods/app_state_pods.dart';
 
 void main() {
   Routemaster.setPathUrlStrategy();
-  runApp(MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 /// Title observer that updates the app's title when the route changes
@@ -30,47 +31,41 @@ class TitleObserver extends RoutemasterObserver {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppState(),
-      child: Builder(
-        builder: (context) {
-          return MaterialApp.router(
-            title: 'Routemaster Demo',
-            routeInformationParser: RoutemasterParser(),
-            routerDelegate: RoutemasterDelegate(
-              observers: [TitleObserver()],
-              routesBuilder: (context) {
-                // We swap out the routing map at runtime based on app state
-                final appState = Provider.of<AppState>(context);
-                final isLoggedIn = appState.isLoggedIn;
-                return isLoggedIn
-                    ? _buildRouteMap(appState)
-                    : loggedOutRouteMap;
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
+  _MyAppState createState() => _MyAppState();
 }
 
-class AppState extends ChangeNotifier {
-  bool _isLoggedIn = false;
-  bool get isLoggedIn => _isLoggedIn;
-  set isLoggedIn(bool value) {
-    _isLoggedIn = value;
-    notifyListeners();
-  }
+class _MyAppState extends State<MyApp> {
+  late RoutemasterDelegate _delegate;
+  late bool _isLoggedIn;
+  late bool _showBonusTab;
 
-  bool _showBonusTab = false;
-  bool get showBonusTab => _showBonusTab;
-  set showBonusTab(bool value) {
-    _showBonusTab = value;
-    notifyListeners();
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(builder: (context, watch, child) {
+      _isLoggedIn = watch(isLoggedInPod).state;
+      _showBonusTab = watch(showBonusTab).state;
+      _delegate = RoutemasterDelegate(
+        observers: [TitleObserver()],
+        routesBuilder: (BuildContext context) {
+          debugPrint('Routes builder: Is logged in: $_isLoggedIn');
+          debugPrint('Routes builder: Show bonus tab: $_showBonusTab');
+          // We swap out the routing map at runtime based on app state
+          return _isLoggedIn
+              ? _buildRouteMap(_showBonusTab)
+              : loggedOutRouteMap;
+        },
+      );
+
+      return MaterialApp.router(
+        title: 'Routemaster Demo',
+        routeInformationParser: RoutemasterParser(),
+        routerDelegate: _delegate,
+      );
+    });
   }
 }
 
@@ -78,14 +73,14 @@ class AppState extends ChangeNotifier {
 // This only allows the user to navigate to the root path.
 // Note: building the route map from methods allows hot reload to work
 final loggedOutRouteMap = RouteMap(
-  onUnknownRoute: (route, context) => Redirect('/'),
+  onUnknownRoute: (route) => Redirect('/'),
   routes: {
     '/': (_) => MaterialPage<dynamic>(child: LoginPage()),
   },
 );
 
 // This is the real route map - used if the user is logged in.
-RouteMap _buildRouteMap(AppState appState) {
+RouteMap _buildRouteMap(bool showBonusTab) {
   return RouteMap(
     routes: {
       '/': (_) => CupertinoTabPage(
@@ -93,7 +88,7 @@ RouteMap _buildRouteMap(AppState appState) {
             paths: [
               '/feed',
               '/search',
-              if (appState.showBonusTab) '/bonus',
+              if (showBonusTab) '/bonus',
               '/notifications',
               '/settings',
             ],
@@ -157,7 +152,7 @@ RouteMap _buildRouteMap(AppState appState) {
             child: TabBarPage(),
             paths: [
               'one',
-              if (appState.showBonusTab) 'bonus',
+              if (showBonusTab) 'bonus',
               'settings',
             ],
           ),
