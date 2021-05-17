@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../utils/app_theme.dart';
 
-// All theming related providers in this file.
+// All theming related providers "pods" in this file.
 
 /// themeModeProvider represents a [StateProvider] to provide the state of
 /// the [ThemeMode], so to be able to toggle the application wide theme mode

@@ -20,7 +20,7 @@ dependencies:
   flutter_riverpod: ^0.14.0+3
 
   # https://pub.dev/packages/routemaster
-  routemaster: ^0.8.0
+  routemaster: ^0.9.0-dev1
 
 dev_dependencies:
   flutter_test:

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
-import 'grid_items.dart';
+import '../widgets/grid_items.dart';
 
 class NotificationsPage extends StatefulWidget {
   @override

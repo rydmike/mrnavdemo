@@ -6,6 +6,9 @@ class AppTheme {
   // This constructor prevents external instantiation and extension.
   AppTheme._();
 
+  // Outline border width of toggle buttons and OutlineButton
+  static const outlineBorderWidth = 1.5;
+
   // The active used light theme.
   static ThemeData light({
     required int usedTheme,
@@ -19,14 +22,15 @@ class AppTheme {
       appBarStyle: appBarStyle,
       surfaceStyle: surfaceStyle,
       appBarElevation: 0.5,
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      visualDensity:
+          VisualDensity.standard, //FlexColorScheme.comfortablePlatformDensity,
     );
     // Currently just used in one sub-theme, but we will need it in more.
     final ColorScheme _colorScheme = _flexScheme.toScheme;
     return _flexScheme.toTheme.copyWith(
       // Add our custom button shape and padding theming.
       elevatedButtonTheme: elevatedButtonTheme,
-      outlinedButtonTheme: outlinedButtonTheme,
+      outlinedButtonTheme: outlinedButtonTheme(_colorScheme, Colors.black38),
       textButtonTheme: textButtonTheme,
       toggleButtonsTheme: toggleButtonsTheme(_colorScheme),
       inputDecorationTheme: inputDecorationTheme(
@@ -48,13 +52,14 @@ class AppTheme {
       appBarStyle: appBarStyle,
       surfaceStyle: surfaceStyle,
       appBarElevation: 0.5,
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
+      visualDensity:
+          VisualDensity.standard, //FlexColorScheme.comfortablePlatformDensity,
     );
     // Currently just used in one sub-theme, but we will need it in more.
     final ColorScheme _colorScheme = _flexScheme.toScheme;
     return _flexScheme.toTheme.copyWith(
       elevatedButtonTheme: elevatedButtonTheme,
-      outlinedButtonTheme: outlinedButtonTheme,
+      outlinedButtonTheme: outlinedButtonTheme(_colorScheme, Colors.white38),
       textButtonTheme: textButtonTheme,
       toggleButtonsTheme: toggleButtonsTheme(_colorScheme),
       inputDecorationTheme: inputDecorationTheme(
@@ -67,28 +72,56 @@ class AppTheme {
   // a Stadium rounded design, consistent with the rounded design of the app.
   static ElevatedButtonThemeData get elevatedButtonTheme =>
       ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-        shape: StadiumBorder(),
-        padding: roundButtonPadding,
-      ));
+        style: ElevatedButton.styleFrom(
+          minimumSize: minButtonSize,
+          shape: StadiumBorder(),
+          padding: roundButtonPadding,
+        ),
+      );
 
-  static OutlinedButtonThemeData get outlinedButtonTheme =>
+  static OutlinedButtonThemeData outlinedButtonTheme(
+          ColorScheme scheme, Color disabledColor) =>
       OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-        shape: StadiumBorder(),
-        padding: roundButtonPadding,
-      ));
+        style: OutlinedButton.styleFrom(
+          minimumSize: minButtonSize,
+          shape: StadiumBorder(),
+          padding: roundButtonPadding,
+        ).copyWith(
+          side: MaterialStateProperty.resolveWith<BorderSide?>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.disabled))
+                return BorderSide(
+                  color: disabledColor,
+                  width: 0.5,
+                );
+              if (states.contains(MaterialState.error))
+                return BorderSide(
+                  color: scheme.error,
+                  width: outlineBorderWidth,
+                );
+              return BorderSide(
+                  color: scheme.primary, width: outlineBorderWidth);
+            },
+          ),
+        ),
+      );
 
   static TextButtonThemeData get textButtonTheme => TextButtonThemeData(
-          style: TextButton.styleFrom(
-        shape: StadiumBorder(),
-        padding: roundButtonPadding,
-      ));
+        style: TextButton.styleFrom(
+          minimumSize: minButtonSize,
+          shape: StadiumBorder(),
+          padding: roundButtonPadding,
+        ),
+      );
 
   // The stadium rounded buttons generally need a bit more padding to look good,
   // adjust here to tune the padding for all of them globally in the app.
+  // Currently using the default padding the old buttons had.
   static const EdgeInsets roundButtonPadding =
-      EdgeInsets.symmetric(horizontal: 20, vertical: 16);
+      EdgeInsets.symmetric(horizontal: 16);
+
+  // The old buttons had a minimum size that looked better, we keep that.
+  static const Size minButtonSize = Size(88, 36);
 
   /// ToggleButtons theme
   static ToggleButtonsThemeData toggleButtonsTheme(ColorScheme colorScheme) =>
@@ -98,7 +131,7 @@ class AppTheme {
         fillColor: colorScheme.primary.withOpacity(0.85),
         hoverColor: colorScheme.primary.withOpacity(0.2),
         focusColor: colorScheme.primary.withOpacity(0.3),
-        borderWidth: 1.5,
+        borderWidth: outlineBorderWidth,
         borderColor: colorScheme.primary,
         selectedBorderColor: colorScheme.primary,
         borderRadius: BorderRadius.circular(50),

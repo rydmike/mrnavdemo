@@ -47,9 +47,10 @@ class MyApp extends ConsumerWidget {
       routerDelegate: RoutemasterDelegate(
         observers: [TitleObserver()],
         routesBuilder: (BuildContext context) {
-          bool _isLoggedIn = watch(isLoggedInPod).state;
-          bool _showBonusTab = watch(showBonusTab).state;
+          final bool _isLoggedIn = watch(isLoggedInPod).state;
+          final bool _showBonusTab = watch(showBonusTab).state;
           // We swap out the routing map at runtime based on app state
+          debugPrint('routesBuilder called!');
           return _isLoggedIn
               ? _buildRouteMap(_showBonusTab)
               : loggedOutRouteMap;
